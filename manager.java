@@ -1,25 +1,29 @@
-package cs145.labs.lab2;
-import java.util.Scanner;
+package cs145.labs.lab22;
 
-// this is the class that deals the cards. this is where we will program the blackjack game. ie: dealer gets two cards, player gets two cards, and if we add more players they will get two cards too. then we calculate who wins... blackjack rules and so on.
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class manager {
-    public static void main(String[] args) {
-        card dealer = new card();
-        dealer.shuffle();
-    
-        System.out.println("\nHow manny cards would you like delt? (1-52)\n");
-        Scanner scanner = new Scanner(System.in);
-        int cardCount = scanner.nextInt();
-        if(0 < cardCount){
-          for (int i = 0; i < cardCount; i++) {
-            int cardNumber = i + 1;
-            System.out.printf("\nDealing card #%s: " + dealer.dealCard(),cardNumber);
-          }
-        }else{
-          System.out.println("\nIllegal amount requested.");
-          main(args);
+    private ArrayList<card> cards;
+
+    public manager() {
+        cards = new ArrayList<>();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"}; //had to move this to our manager class, as to manipulate the arrays nicer.
+
+        for (String suit : suits) {
+            for (int i = 0; i < ranks.length; i++) {//this for loop is how i got the value to match up to the array. i found it impossible to make the int arry work with the two sting array lists. works by finding the index with .length and adding to i till the value matches with the card. 
+                int value = (i < 10) ? (i + 2) : (10); // 10 for face cards
+                if (ranks[i].equals("Ace")) {
+                    value = 11; // this starts out as 11 to solve the double value problem wiith aces
+                }
+                cards.add(new card(suit, ranks[i], value));
+            }
         }
-        scanner.close();
-      }
+        Collections.shuffle(cards);
+    }
+
+    public card dealCard() {
+        return cards.remove(cards.size() - 1);
+    }
 }
